@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 import plotly.express as px
+import traceback
 
 # Import User Defined Modules
 from . import productscrapper as ps
@@ -63,40 +64,43 @@ def reviewAnalysis(request):
         return 'Error'
 
 def DisplayChart(request):
-    x_data = [0,1,2,3]
-    y_data = [x**2 for x in x_data]
+    try:
 
-    # Plot graph using ploty dash
-    df = px.data.iris()
-    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species",
-                    size='petal_length', hover_data=['petal_width'])
-    plot_div = plot(fig,output_type='div',include_plotlyjs=False)
+        x_data = [0,1,2,3]
+        y_data = [x**2 for x in x_data]
 
-    # Pie chart using plotly dash
+        # Plot graph using ploty dash
+        df = px.data.iris()
+        fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species",
+                        size='petal_length', hover_data=['petal_width'])
+        plot_div = plot(fig,output_type='div',include_plotlyjs=False)
 
-    # This dataframe has 244 lines, but 4 distinct values for `day`
-    df = px.data.tips()
-    fig = px.pie(df, values='tip', names='day')
-    pie_div=plot(fig,output_type='div',include_plotlyjs=False)
-   
-    # # graph using matplot lib
-   
-    # buf = io.BytesIO()
-    # _=plt.bar(x_data, y_data, color="#6c3376", linewidth=3)
-    # ax = plt.subplot()
-    # ax.set_ylim(0,10)
-    # ax.set_xlim(0,5)
-    # plt.title("Cost of Living", fontsize=18, fontweight='bold', color='blue')
-    # plt.xlabel("Year", fontsize=16)
-    # plt.ylabel("Number of futurestud.io Tutorials", fontsize=16)
-    # plt.legend(["First","Second"])
+        # Pie chart using plotly dash
 
-    # plt.savefig(buf,format='png')
-    # buf.seek(0)
-    # buffer = b''.join(buf)
-    # b2 = base64.b64encode(buffer)
-    # plot_div=b2.decode('utf-8')
+        # This dataframe has 244 lines, but 4 distinct values for `day`
+        df = px.data.tips()
+        fig = px.pie(df, values='tip', names='day')
+        pie_div=plot(fig,output_type='div',include_plotlyjs=False)
+    
+        # # graph using matplot lib
+    
+        # buf = io.BytesIO()
+        # _=plt.bar(x_data, y_data, color="#6c3376", linewidth=3)
+        # ax = plt.subplot()
+        # ax.set_ylim(0,10)
+        # ax.set_xlim(0,5)
+        # plt.title("Cost of Living", fontsize=18, fontweight='bold', color='blue')
+        # plt.xlabel("Year", fontsize=16)
+        # plt.ylabel("Number of futurestud.io Tutorials", fontsize=16)
+        # plt.legend(["First","Second"])
 
-    # return render(request, "index.html", context={'plot_div': plot_div})
-    return render(request, 'product_reviewer_app/chart.html', context={'plot_div': plot_div,'pie_div':pie_div})
+        # plt.savefig(buf,format='png')
+        # buf.seek(0)
+        # buffer = b''.join(buf)
+        # b2 = base64.b64encode(buffer)
+        # plot_div=b2.decode('utf-8')
 
+        # return render(request, "index.html", context={'plot_div': plot_div})
+        return render(request, 'product_reviewer_app/chart.html', context={'plot_div': plot_div,'pie_div':pie_div})
+    except Exception as e:
+        print(traceback.format_exc())
