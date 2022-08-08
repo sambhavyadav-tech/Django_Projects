@@ -1,0 +1,1114 @@
+<head>
+    <meta charset="utf-8">
+    <title>review analysis</title>
+
+    <!-- Add js for plotly charts -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        #p1 {
+            margin-left: 2rem;
+            margin-right: 0;
+            margin-top: 1rem;
+            background-color: white;
+            color: black;
+            padding: .7rem;
+            border-radius: .5rem;
+            border: 1px solid green;
+            /* #ccc; */
+            /* border-color: black; */
+            /* border-width: 2px; */
+            /* border-style: solid; */
+            font-weight: 100px;
+            /* min-height: 5rem; */
+            height: 7rem;
+            overflow: auto;
+            transition: box-shadow .3s;
+            transition: background-color .5s;
+            transition: color .5s;
+        }
+       
+        #p1:hover {
+            background-color: rgb(19, 112, 19);
+            color: white;
+            /* font-weight: bold; */
+            box-shadow: 0 0 11px black;
+        }
+       
+        #p2 {
+            margin-left: 3rem;
+            margin-right: 0;
+            background-color: white;
+            color: black;
+            padding: .7rem;
+            border-radius: .5rem;
+            border: 1px solid red;
+            /* #ccc; */
+            /* border-color: black; */
+            /* border-width: 2px; */
+            /* border-style: solid; */
+            /* font-weight: bold; */
+            /* min-height: 5rem; */
+            height: 7rem;
+            overflow: auto;
+            transition: box-shadow .3s;
+            transition: background-color .5s;
+            transition: color .5s;
+        }
+       
+        #p2:hover {
+            background-color: rgb(196, 41, 41);
+            color: white;
+            /* float: right; */
+            /* font-weight: bold; */
+            box-shadow: 0 0 11px black;
+        }
+       
+        .card {
+            border-radius: .5rem;
+            transition: box-shadow .3s;
+        }
+       
+        .card:hover {
+            /* background-color: black; */
+            /* color: white; */
+            float: right;
+            font-weight: bold;
+            box-shadow: 0 0 11px black;
+        }
+       
+        a {
+            transition: font-weight .2s;
+        }
+       
+        a:hover {
+            /* background-color: black; */
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Product Reviewer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="d-flex justify-content-center bg-white" style="color:red">
+        <button class="btn btn-white" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm text-success" role="status" aria-hidden="true"></span>
+        </button>
+        <h3>Review Analysis </h2>
+    </div>
+
+    <div class="row bg-warning">
+        <div class="card col-md-5 mx-auto mt-2" style="width: 45%;">
+            <!-- Show plotly image -->
+            Reviews Pie {% autoescape off %} {{ pie_div }} {% endautoescape %}
+        </div>
+
+        <div class="card my-auto mx-auto mt-2" style="width: 45%;">
+            <!-- Show plotly image -->
+            Time series graph with review count {% autoescape off %} {{ plot_div }} {% endautoescape %}
+        </div>
+
+        <div class="card col-md-5 mx-auto mt-2" style="width: 45%;">
+            <!-- Show a matplotlib image -->
+            Positive Words CLoud
+            <img src="data:image/png;base64, {{ plot_positive_wc_img }}">
+        </div>
+
+        <div class="card my-auto mx-auto mt-2" style="width: 45%;">
+            <!-- Show a matplotlib image -->
+            Negative Words CLoud
+            <img src="data:image/png;base64, {{ plot_negative_wc_img }}">
+        </div>
+
+        <div class="my-auto" style="width: 80%; align-content: center;">
+            <p id="p1">{{positive_comment}}</p>
+        </div>
+        <div class="container" style="width: 80%; margin-right: 2rem;">
+            <p class="float-center" id="p2">{{negative_comment}}</p>
+        </div>
+
+    </div>
+
+    <div class="container-fluid bg-danger text-end justify-content-center">
+        <a href="/" style="color:rgb(241, 252, 141)">HOME</a>
+    </div>
+
+</body>
+<!-- FOOTER -->
+<footer class="container">
+    <p class="float-end"><a href="#">Back to top</a></p>
+    <p>&copy; 2020–2021 Product Reviewer</p>
+</footer>
+
+</html>
+
+index.html:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>{% block title %}Prouct Reviewer{% endblock %}</title>
+
+    <style>
+        /* caraousel image style */
+       
+        .carousel-inner {
+            background-image: url("https://miro.medium.com/max/912/1*EW7vUH4XLCSIiWAmJLvV8g.jpeg");
+            background-color: #cccccc;
+            background-position: center;
+            /* background-repeat: no-repeat; */
+            background-size: length;
+            max-height: 450px;
+        }
+        /* img style */
+       
+        img {
+            max-height: 400px;
+            max-width: auto;
+        }
+        /* search button style */
+       
+        #search {
+            color: black;
+        }
+       
+        #search:hover {
+            color: white;
+        }
+       
+        a:hover {
+            /* background-color: black; */
+            font-weight: bold;
+        }
+       
+        .col-md-4 {
+            position: relative;
+            /* border: 1px solid #333; */
+            overflow: hidden;
+            width: 400px;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+       
+        .col-md-4 img {
+            vertical-align: top;
+            max-width: 100%;
+            -moz-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+       
+        .col-md-4:hover img {
+            -moz-transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.2);
+        }
+
+        {% block style %} {% endblock style%}
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Product Reviewer</a>
+                    </li>
+                </ul>
+                <form class="d-flex" action="{% url 'search_result' %}" method="get">
+                    <input style="width: 50vw;" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                    <button id="search" class="btn btn-warning btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    {% block body %}
+
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+
+                <img src="https://img.etimg.com/thumb/msid-70602645,width-650,imgsize-206659,,resizemode-4,quality-100/amazon-is-offering-deal-of-the-day-on-apple-samsung-oppo-vivo-honor-oneplus-among-others-.jpg" class="d-block" style="  margin-top: 1rem; margin-left: auto;  margin-right: auto;  margin-bottom: 120px; border-radius:1rem"
+                    alt="...">
+                <div class="carousel-caption d-none d-md-block" style=" height:6rem; width:50rem;color:white; background:red ; margin-top: 1rem; margin-left: 1rem;  margin-right: auto;  margin-bottom: 5rem; border-radius:1rem">
+                    <h5>Search all your favourite smartphones.</h5>
+                    <p>Get it reviewed by the Product Reviewer.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-se-01.jpg" class="d-block" style="  margin-top: 1rem; margin-left: auto;  margin-right: auto;  margin-bottom: 120px; border-radius:1rem" alt="...">
+                <div class="carousel-caption d-none d-md-block bg-info" style=" height:6rem; width:50rem;color:black; background:blue ; margin-top: 1rem; margin-left: auto;  margin-right: auto;  margin-bottom: 5rem; border-radius:1rem">
+                    <h5>Search all your favourite smartphones.</h5>
+                    <p>Get it reviewed by the Machine Algo.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://api.time.com/wp-content/uploads/2017/05/laptops.jpg?w=800&quality=85" class="d-block" style="  margin-top: 1rem; margin-left: auto;  margin-right: auto;  margin-bottom: 120px; border-radius:1rem" alt="...">
+                <div class="carousel-caption d-none d-md-block bg-success" style=" height:6rem; width:50rem;color:white; background:blue ; margin-top: 1rem; margin-left: auto;  margin-right: auto;  margin-bottom: 5rem; border-radius:1rem">
+                    <h5>Search all your favourite smartphones.</h5>
+                    <p>Get it reviewed by the Machine Algo.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon bg-danger" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon bg-success" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <hr class="featurette-divider fa-bold">
+
+    <div class="row featurette bg-warning" style="width: 100%; height: 50vh;">
+        <div class="col-md-8">
+            <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It’ll blow your mind.</span></h2>
+            <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://d3mybowqzhpktj.cloudfront.net/www.senioradvisor.com/blog/wp-content/uploads/2013/11/20115149/big5.png" style="height: 50vh; width:fit-content;" class="d-block w-100" alt="...">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette bg-success" style="width: 100%; height: 50vh;">
+        <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">See for yourself.</span></h2>
+            <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
+        </div>
+        <div class="col-md-4 order-md-1 mx-3">
+            <img src="https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-se-1.jpg" style="height: 50vh; width:inherit;padding-left: 2rem;" class="d-block w-100" alt="...">
+
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette bg-info" style="width: 100%; height: 50vh;">
+        <div class="col-md-8">
+            <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+            <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-se-1.jpg" style="height: 50vh; width:inherit;" class="d-block w-100" alt="...">
+
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+    {% endblock body %}
+    <!-- FOOTER -->
+    <footer class="container">
+        <p class="float-end"><a href="#">Back to top</a></p>
+        <p style="color:green">&copy; 2020–2021 Product Reviewer</p>
+    </footer>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    -->
+
+</body>
+
+</html>
+
+search,html:
+ {% extends './index.html' %}
+ {% block title %}Search {{ product }} {% endblock %}
+ {%block style%}
+        .col-md-6 {
+            border-radius: .5rem;
+            {% comment %} border: 0.5px solid black; {% endcomment %}
+            transition: box-shadow .3s;
+            align-content: center;
+        }
+        .col-md-6:hover {
+            background-color: white;
+            color: green;
+            box-shadow: 0 0 11px black;
+
+        }
+       
+        .col-md-5 {
+            border-radius: .5rem;
+            align-content: center;
+            overflow:auto;
+            transition: transform .3s;
+        }
+        .col-md-5:hover{
+             transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+             float:right;
+        }
+
+        .d-block {
+            border-radius: .5rem;
+            {% comment %} border: 1px solid red; {% endcomment %}
+            {% comment %} transition: box-shadow .3s; {% endcomment %}
+            width:auto; min-height:14rem; overflow:auto;
+        }
+        .d-block:hover {
+            {% comment %} box-shadow: 0 0 11px black; {% endcomment %}
+        }
+        body{
+            background-color:black;
+        }
+  {% endblock %}
+ {% block body %}
+ <div class="d-flex justify-content-center bg-white" style="color:red;">
+    <h3 style="text-align:center;">Showing Top Results For {{product}} </h3>
+</div>
+    <ul style="background-color: black; margin:0px;">
+        {% for product in searchResult %}
+
+        <div class="row featurette text-center mx-auto m-3" style="background-color:lightyellow; border-radius:.5rem; width:70%">
+            <div class="col-md-6 m-3 p-5 text-center ">
+                <h5 class="featurette-heading">{{ product.pName }}. <p class="fw-normal" style="color:blue; font-size:1rem">Ratings : {{product.pRatings}}</p></h5>
+                <p class="lead fw-bold" style="color:red">{{product.pPrice}}</p>
+                <a class="fs-6" href="/reviewanalysis/?id={{ product.pId }}" style="color:#081046;">Click Here To Do Review Analysis</a>
+            </div>
+            <div class="col-md-5 p-5 text-end">
+                <img src="{{product.pImage}}" class="d-block" alt="{{ product.pName }}">
+               
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+    </ul>
+    <!-- <button class="container mx-auto" href="/search/?query={{ product }}" action="{% url 'search_result' %}" method="get" style="color:maroon">Next page for {{ product }}</a>  -->
+    <!-- <button id="nextPage" class="btn btn-warning btn-outline-success" type="submit">Next page for {{ product }}</button> -->
+    <div class="d-flex justify-content-end bg-success">
+        <!-- <button type="button" class="btn btn-info btn-outline-white m-2"> Next page for {{ product }}</button> -->
+        <a href="/search/?query={{ product }}" style="color:white; margin:1rem">Next page for {{ product }}</a>
+    </div>
+    {% endblock %}
+
+settings.py:
+"""
+Django settings for Product_Reviewer project.
+
+Generated by 'django-admin startproject' using Django 3.1.4.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/3.1/topics/settings/
+
+For the full list of settings and their values, see
+https://docs.djangoproject.com/en/3.1/ref/settings/
+"""
+
+from pathlib import Path
+import os
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'r4m6#nxemm_xxh-am5+!)o)8r=)st36ir)$lflmv)s+eeffxt4'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'Product_Reviewer.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'Product_Reviewer.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/3.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+STATIC_URL = '/static/'
+
+urls.py:
+"""Product_Reviewer URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include('product_review_app.urls')),
+    path('admin/', admin.site.urls),
+]
+
+views.py:
+from django.shortcuts import render
+from django.template import RequestContext
+from plotly.offline import plot, iplot
+from plotly.graph_objs import Scatter
+import matplotlib.pyplot as plt
+import io
+import base64
+import plotly.express as px
+
+# Import User Defined Modules
+from . import productscrapper as ps
+from . import reviewanalysis as ra
+
+# Create your views here.
+from django.http import HttpResponse, JsonResponse
+
+def index(request):
+    #return HttpResponse("Hello, world. You're at the polls index.")
+    response =  render(request, 'product_review/index.html')
+   
+    response.set_cookie('searchProdPageNo', 0)
+    response.set_cookie('prodName', '')
+    # return render(request, 'product_review/index.html')
+    return response
+
+def SearchPage(request):
+    # set cookie for traversing to different pages
+    prodPageNo=1
+
+    # get search box data
+    searchVal = request.GET['query']
+    print(searchVal)
+    if 'searchProdPageNo' in request.COOKIES and  'prodName' in request.COOKIES:
+        if request.COOKIES['prodName']!=searchVal:
+            prodPageNo = 1
+        else:
+            prodPageNo=int(request.COOKIES['searchProdPageNo'])
+   
+    # call the scrapper module function to get the list of products
+    #params = {'products': "https://m.media-amazon.com/images/I/71KxuRv3-fL._AC_UL320_.jpg", 'search':srh}
+    params = {'product': searchVal, 'searchResult':ps.getProductIdAndImage(searchVal,prodPageNo)}
+    #print(params)
+
+    # set cookie for traversing to different pages
+
+    response =  render(request, 'product_review/search.html', params)
+   
+    response.set_cookie('searchProdPageNo', int(prodPageNo)+1)
+    response.set_cookie('prodName', searchVal)
+    print(int(prodPageNo)+1)
+    # return render(request, 'product_review/search.html', params)
+    return response
+
+def reviewAnalysis(request):
+    try:
+        # get pId
+        pId = request.GET['id']
+        # plot_overall_wc_img,pie_div,timeSeries_div,plot_positive_wc_img,plot_positive_wc_img,positive_comment,negative_comment=ra.getReviewCharts(pId)
+        pie_div,timeSeries_div,positive_comment,negative_comment,plot_positive_wc_img,plot_negative_wc_img = ra.getReviewCharts(pId)
+        return render(request, 'product_review/chart.html', context={'plot_div': timeSeries_div,'pie_div':pie_div,'positive_comment':positive_comment,'negative_comment':negative_comment,'plot_positive_wc_img':plot_positive_wc_img,'plot_negative_wc_img':plot_negative_wc_img })
+    except Exception as e:
+        print(e)
+        return 'Error'
+
+def DisplayChart(request):
+    x_data = [0,1,2,3]
+    y_data = [x**2 for x in x_data]
+
+    # Plot graph using ploty dash
+    df = px.data.iris()
+    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species",
+                    size='petal_length', hover_data=['petal_width'])
+    plot_div = plot(fig,output_type='div',include_plotlyjs=False)
+
+    # Pie chart using plotly dash
+
+    # This dataframe has 244 lines, but 4 distinct values for `day`
+    df = px.data.tips()
+    fig = px.pie(df, values='tip', names='day')
+    pie_div=plot(fig,output_type='div',include_plotlyjs=False)
+   
+    # # graph using matplot lib
+   
+    # buf = io.BytesIO()
+    # _=plt.bar(x_data, y_data, color="#6c3376", linewidth=3)
+    # ax = plt.subplot()
+    # ax.set_ylim(0,10)
+    # ax.set_xlim(0,5)
+    # plt.title("Cost of Living", fontsize=18, fontweight='bold', color='blue')
+    # plt.xlabel("Year", fontsize=16)
+    # plt.ylabel("Number of futurestud.io Tutorials", fontsize=16)
+    # plt.legend(["First","Second"])
+
+    # plt.savefig(buf,format='png')
+    # buf.seek(0)
+    # buffer = b''.join(buf)
+    # b2 = base64.b64encode(buffer)
+    # plot_div=b2.decode('utf-8')
+
+    # return render(request, "index.html", context={'plot_div': plot_div})
+    return render(request, 'product_review/chart.html', context={'plot_div': plot_div,'pie_div':pie_div})
+
+productsscrapper.py
+import re
+import requests
+from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor
+
+# Import user defined files
+from . import reviewanalysis as ra
+
+def getAmazonSearch(search_query):
+    url="https://www.amazon.in/s?k="+search_query
+    print(url)
+    page=requests.get(url)#,cookies=cookie,headers=header)
+    while page.status_code!=200:
+        page=requests.get(url)
+    return page
+
+def getProductIdAndImage(searchVal, prodPageNo):
+    try:
+
+        data_asin=[]
+        #response=getAmazonSearch('titan+men+watches')
+        if int(prodPageNo) not in [0,1]:
+            response=getAmazonSearch(searchVal+"&page="+str(prodPageNo))
+        else:
+            response=getAmazonSearch(searchVal)
+        print(response)
+        #res=response.content
+        #print(type(res))
+        #str(res)
+        soup=BeautifulSoup(response.content,'html.parser')
+        #print(soup)
+        filterKeyList=['s-result-item s-asin sg-col-0-of-12 sg-col-16-of-20 sg-col sg-col-12-of-16','sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 sg-col sg-col-4-of-20']
+        filterKey=""
+        for filter in filterKeyList:
+            if len(soup.find_all("div",attrs={"class":filter}))>1:
+                filterKey = filter
+        tasks=[]
+        executor=ThreadPoolExecutor(max_workers=1024)
+
+        for i in soup.find_all("div",attrs={"class":filterKey}):
+            # #print(i)
+            # print(i['data-asin'])
+            # print(re.findall('alt="(.+.jpg)" ',str(i))[0].split('" ')[0])
+            # print(re.findall('alt="(.+.jpg)" ',str(i))[0].split('" ')[-1].strip('src="'))
+            data_asin.append({
+                "pName" : re.findall('alt="(.+.jpg)" ',str(i))[0].split('" ')[0],
+                "pId" : i['data-asin'],
+                'pImage' : re.findall('alt="(.+.jpg)" ',str(i))[0].split('" ')[-1].strip('src="'),
+                'pRatings' : re.findall('class="a-icon-alt">(.+ stars)',str(i))[0],
+                "pPrice" : "₹"+re.findall('class="a-offscreen">₹(.+)',str(i))[0].split('<')[0]
+            })
+            tasks.append(executor.submit(ra.saveReviews,i['data-asin']))
+
+        return data_asin
+    except Exception as e:
+        print('Error occurred due to'+str(e))
+        return data_asin
+
+reviewanalysis.py:
+from datetime import datetime
+import re
+from concurrent.futures import ThreadPoolExecutor,as_completed
+from numpy.lib.function_base import piecewise
+import requests
+from bs4 import BeautifulSoup
+import string
+import nltk
+from nltk.corpus import stopwords
+from nltk import PorterStemmer
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import plotly.graph_objects as go
+import pandas as pd
+from plotly.offline import plot, iplot
+from plotly.graph_objs import Scatter
+import io
+import base64
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+analyser = SentimentIntensityAnalyzer()
+
+def Searchasin(asin):
+    url="https://www.amazon.in/dp/"+asin
+    # print(url)
+    page=requests.get(url)#,cookies=cookie,headers=header)
+    print(page.status_code)
+    while page.status_code!=200:
+        page=requests.get(url)
+    return page
+
+def Searchreviews(review_link):
+    try:
+        url="https://www.amazon.in"+review_link
+        print(url)
+        page=requests.get(url)#,cookies=cookie,headers=header)
+        while page.status_code!=200:
+            page=requests.get(url)
+        return page
+    except Exception as e:
+        print('error',str(e),review_link)
+        return 'error'
+
+def getReviewsList(link,k):
+    reviews=[]
+    location=[]
+    date=[]
+    response=Searchreviews(link+'&pageNumber='+str(k))
+    if str(type(response))!="<class 'str'>":
+        soup=BeautifulSoup(response.content,'html.parser')
+    else:
+        return {'rev':reviews,'loc':location,'dat':date}    
+    for enum,i in enumerate(soup.findAll("span",{'data-hook':"review-body"})):
+        reviews.append(i.text)
+        j=soup.findAll("span",attrs={'class':"a-size-base a-color-secondary review-date"})[enum]
+        location.append(j.text.split()[2])
+        date.append('-'.join(j.text.split()[4:]))
+    return {'rev':reviews,'loc':location,'dat':date}
+
+def deEmojify(inputString):
+    return inputString.encode('ascii', 'ignore').decode('ascii') # A function to remove emojis from the reviews
+
+def clean_text(text):
+    # nltk.download("stopwords")
+    STOPWORDS=stopwords.words("english") #stopwords are the most common unnecessary words. eg is, he, that, etc.
+    ps=PorterStemmer()
+   
+    text=deEmojify(text) # remove emojis
+    text_cleaned="".join([x for x in text if x not in string.punctuation]) # remove punctuation
+   
+    text_cleaned=re.sub(' +', ' ', text_cleaned) # remove extra white spaces
+    text_cleaned=text_cleaned.lower() # converting to lowercase
+    tokens=text_cleaned.split(" ")
+    tokens=[token for token in tokens if token not in STOPWORDS] # Taking only those words which are not stopwords
+    text_cleaned=" ".join([ps.stem(token) for token in tokens])
+    return text_cleaned
+
+def sentiment_analyzer_scores(sentence):
+    score = analyser.polarity_scores(sentence)
+    return score
+
+def compound_score(text):
+    comp=sentiment_analyzer_scores(text)
+    return comp['compound'] # returns the compound score from the dictionary
+
+def sentiment_category(score):
+    if score >= 0.05:
+        return "positive"
+    elif score <= -0.05:
+        return "negative"
+    else:
+        return "neutral"
+
+def getAsinData(pId):
+    response=Searchasin(pId)
+    return response
+
+def reviewPie(df):
+    labels = ['Positive','Negative','Neutral']
+    values = [df[df['review_category'] == 'positive']['review_category'].count(),
+            df[df['review_category'] == 'negative']['review_category'].count(),
+            df[df['review_category'] == 'neutral']['review_category'].count()]
+    colors = ['green', 'red', 'yellow']
+    # pull is given as a fraction of the pie radius
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values, pull=[0.1, 0.1, 0.3])])
+    fig.update_traces(hoverinfo='label+percent', textinfo='label+percent', textfont_size=15,
+                    marker=dict(colors=colors, line=dict(color='#000000', width=1)))
+    fig.update_layout(
+        autosize=False,
+        width=590,
+        # height=500,
+        margin=dict(
+            l=50,
+            r=50,
+            b=0,
+            t=30
+        ),
+        paper_bgcolor="white"
+    )
+
+    fig.update_layout(
+        legend=dict(
+            x=0.9,
+            y=1,
+            orientation="v",
+            title_font_family="Times New Roman",
+            font=dict(
+                family="Roman",
+                size=15,
+                color="black"
+            ),
+            bgcolor="LightSteelBlue",
+            bordercolor="white",
+            borderwidth=1
+        )
+    )
+    # fig.show()
+    pie_div=plot(fig,output_type='div',include_plotlyjs=False)
+    return {"pie_div":pie_div}
+   
+def timeSeriesGraph(lineDf):
+    fig = go.Figure()
+
+    # Add traces
+    fig.add_trace(go.Scatter(x=lineDf.date, y=lineDf.review_count,
+                        mode='lines',
+                        name='time series',
+                        marker_color='green'))
+
+    # fig.add_trace(go.Scatter(x=lineDf['date'],
+    #                 y=lineDf['review_count'],
+    #                 name='count on date',mode='markers',marker_size=5,marker_color='black'
+    #                 ))
+
+    fig.update_xaxes(
+        rangeslider_visible=True,
+        rangeselector=dict(
+            buttons=list([
+                dict(count=1, label="1m", step="month", stepmode="backward"),
+                dict(count=6, label="6m", step="month", stepmode="backward"),
+                dict(count=1, label="YTD", step="year", stepmode="todate"),
+                dict(count=1, label="1y", step="year", stepmode="backward"),
+                dict(step="all")
+            ])
+        )
+    )
+
+    fig.update_layout(
+        title='Customer Reviews Count Everyday',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(
+            title='Date',
+            titlefont_size=16,
+            tickfont_size=10,
+        ),
+        yaxis=dict(
+            title='Review Count Per Day',
+            titlefont_size=16,
+            tickfont_size=10,
+        ))
+    fig.update_layout(
+        legend=dict(
+            x=0.9,
+            y=1,
+            orientation="v",
+            title_font_family="Times New Roman",
+            font=dict(
+                family="Roman",
+                size=10,
+                color="black"
+            ),
+            bgcolor="lightgreen",
+            bordercolor="black",
+            borderwidth=1
+        )
+    )
+
+    # fig.show()
+    timeSeries_div=plot(fig,output_type='div',include_plotlyjs=False)
+    return {'timeSeries_div':timeSeries_div}
+
+def positiveWc(df):
+    wordcloud = WordCloud(height=2000, width=2000, background_color='yellow')
+    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='positive','cleaned_reviews'].tolist()))
+    plt.imshow(wordcloud)
+    plt.title("Most common words in positive comments")
+    plt.axis('off')
+    buf = io.BytesIO()
+    plt.savefig(buf,format='png')
+    buf.seek(0)
+    buffer = b''.join(buf)
+    b2 = base64.b64encode(buffer)
+    plot_positive_wc_img=b2.decode('utf-8')
+    return {'posWc':plot_positive_wc_img}
+
+def negativeWc(df):
+    wordcloud = WordCloud(height=2000, width=2000, background_color='red')
+    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='negative','cleaned_reviews'].tolist()))
+    plt.imshow(wordcloud)
+    plt.title("Most common words in negative comments")
+    plt.axis('off')
+    buf = io.BytesIO()
+    plt.savefig(buf,format='png')
+    buf.seek(0)
+    buffer = b''.join(buf)
+    b2 = base64.b64encode(buffer)
+    plot_negative_wc_img=b2.decode('utf-8')
+    return {'negWc':plot_negative_wc_img}
+
+def getReviewCharts(pId):
+    print(datetime.now())
+    # # response=Searchasin(pId)
+    # link=''
+    # response=None
+    # # Get Asin Data for the product id
+    # # while str(type(response))!="<class 'str'>":
+    # #     response=getAsinData(pId)
+    # response=Searchasin(pId)
+    # print(response,type(response))
+    # soup=BeautifulSoup(response.content,'html.parser')
+    # link=soup.findAll("a",attrs={'data-hook':"see-all-reviews-link-foot"})[0]['href']
+    # print(link)
+
+    # # Get Reviews
+    # reviews=[] # Store review data
+    # location=[] # Store location data
+    # date=[] # Store date data
+    # # Get the no of pages for review
+    # tasks=[]
+    # executor=ThreadPoolExecutor(max_workers=100)
+
+    # for k in range(10):# Number of pages
+    #     tasks.append(executor.submit(getReviewsList,link,k))
+
+    # for task in as_completed(tasks):
+    #     revDict=task.result()
+    #     reviews+=revDict['rev']
+    #     location+=revDict['loc']
+    #     date+=revDict['dat']
+
+    # print('reviews Collected-----------------')
+    # revData={'reviews':reviews,'country':location,'date':date} #converting the reviews list into a dictionary
+    # review_data=pd.DataFrame.from_dict(revData) #converting this dictionary into a dataframe
+    # # Store review into csv file
+    # review_data.to_csv(r'D:\Django-Webapp\Django_Product_Reviewer\Product_Reviewer\product_review_app\scrapped_reviews\/'+str(pId)+'_reviews.csv',index=False)
+
+    # df=review_data.copy() # Creating a copy of the original data
+    # df['reviews']=df['reviews'].apply(lambda x:x.strip('\n')) # To remove '\n' from every review
+    # df['cleaned_reviews']=df['reviews'].apply(lambda x:clean_text(x))
+
+    # df['sentiment_score']=df['reviews'].apply(lambda x:compound_score(x)) # applying on the reviews column to get the score
+
+    # df['review_category']=df['sentiment_score'].apply(lambda x:sentiment_category(x))
+
+    # Read data from scrapped reviews csv file
+    df=pd.read_csv(r'D:\Django-Webapp\Django_Product_Reviewer\Product_Reviewer\product_review_app\scrapped_reviews\/'+str(pId)+'_reviews.csv')
+    wcTasks=[]
+    wcExecutor=ThreadPoolExecutor(max_workers=4)
+    wcTasks.append(wcExecutor.submit(positiveWc,df))
+    wcTasks.append(wcExecutor.submit(negativeWc,df))
+   
+    df.sort_values(by=['sentiment_score'],ascending=False).head() # To get top positive review
+
+    positive_comment=list(df.sort_values(by=['sentiment_score'],ascending=False)[:1]['reviews'])[0]
+    negative_comment=list(df.sort_values(by=['sentiment_score'],ascending=True)[:1]['reviews'])[0]
+
+    pie_div=reviewPie(df)
+    wcTasks.append(wcExecutor.submit(reviewPie,df))
+
+    # Review count per day
+    df.groupby(['date']).size()
+    reviewCountDf=df.groupby(['date']).size()
+    reviewCountDf=reviewCountDf.rename('review_count').reset_index()
+    reviewCountDf['date'] = pd.to_datetime(reviewCountDf['date'])
+    reviewCountDf=reviewCountDf.sort_values('date')
+
+    timeSeries_div = timeSeriesGraph(reviewCountDf)
+    wcTasks.append(wcExecutor.submit(timeSeriesGraph,reviewCountDf))
+    print(datetime.now())
+    wcResult={}
+    for task in as_completed(wcTasks):
+        wcResult=task.result()
+        if 'posWc' in wcResult.keys():
+            plot_positive_wc_img=wcResult['posWc']
+        elif 'negWc' in wcResult.keys():
+            plot_negative_wc_img=wcResult['negWc']
+        elif 'pie_div' in wcResult.keys():
+            pie_div=wcResult['pie_div']
+        elif 'timeSeries_div' in wcResult.keys():
+            timeSeries_div=wcResult['timeSeries_div']
+    print(datetime.now())
+    return pie_div,timeSeries_div,positive_comment,negative_comment,plot_positive_wc_img,plot_negative_wc_img
+
+def saveReviews(pId):
+    print(datetime.now())
+    # response=Searchasin(pId)
+    link=''
+    response=None
+    # Get Asin Data for the product id
+    # while str(type(response))!="<class 'str'>":
+    #     response=getAsinData(pId)
+    response=Searchasin(pId)
+    print(response,type(response))
+    soup=BeautifulSoup(response.content,'html.parser')
+    link=soup.findAll("a",attrs={'data-hook':"see-all-reviews-link-foot"})[0]['href']
+    print(link)
+
+    # Get Reviews
+    reviews=[] # Store review data
+    location=[] # Store location data
+    date=[] # Store date data
+    # Get the no of pages for review
+    tasks=[]
+    executor=ThreadPoolExecutor(max_workers=100)
+
+    for k in range(10):# Number of pages
+        tasks.append(executor.submit(getReviewsList,link,k))
+
+    for task in as_completed(tasks):
+        revDict=task.result()
+        reviews+=revDict['rev']
+        location+=revDict['loc']
+        date+=revDict['dat']
+
+    print('reviews Collected-----------------')
+    revData={'reviews':reviews,'country':location,'date':date} #converting the reviews list into a dictionary
+    review_data=pd.DataFrame.from_dict(revData) #converting this dictionary into a dataframe
+   
+    df=review_data.copy() # Creating a copy of the original data
+    df['reviews']=df['reviews'].apply(lambda x:x.strip('\n')) # To remove '\n' from every review
+    df['cleaned_reviews']=df['reviews'].apply(lambda x:clean_text(x))
+
+    df['sentiment_score']=df['reviews'].apply(lambda x:compound_score(x)) # applying on the reviews column to get the score
+
+    df['review_category']=df['sentiment_score'].apply(lambda x:sentiment_category(x))
+
+    # Store review into csv file
+    df.to_csv(r'D:\Django-Webapp\Django_Product_Reviewer\Product_Reviewer\product_review_app\scrapped_reviews\/'+str(pId)+'_reviews.csv',index=False)
+    print('reviews saved for pid', pId)
+
+app/urls.py
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('search/', views.SearchPage, name='search_result'),
+    path('chart/', views.DisplayChart, name='display_chart'),
+    path('reviewanalysis/', views.reviewAnalysis, name='review_analysis'),
+]
+
