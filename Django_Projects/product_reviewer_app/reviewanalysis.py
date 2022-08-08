@@ -201,7 +201,7 @@ def timeSeriesGraph(lineDf):
 
 def positiveWc(df):
     wordcloud = WordCloud(height=2000, width=2000, background_color='yellow')
-    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='positive','cleaned_reviews'].tolist()))
+    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='positive','cleaned_reviews'].tolist()[:10]))
     plt.imshow(wordcloud)
     plt.title("Most common words in positive comments")
     plt.axis('off')
@@ -215,7 +215,7 @@ def positiveWc(df):
 
 def negativeWc(df):
     wordcloud = WordCloud(height=2000, width=2000, background_color='red')
-    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='negative','cleaned_reviews'].tolist()))
+    wordcloud = wordcloud.generate(' '.join(df.loc[df['review_category']=='negative','cleaned_reviews'].tolist()[:10]))
     plt.imshow(wordcloud)
     plt.title("Most common words in negative comments")
     plt.axis('off')
@@ -334,7 +334,7 @@ def saveReviews(pId):
     tasks=[]
     executor=ThreadPoolExecutor(max_workers=100)
 
-    for k in range(10):# Number of pages
+    for k in range(5):# Number of pages
         tasks.append(executor.submit(getReviewsList,link,k))
 
     for task in as_completed(tasks):
